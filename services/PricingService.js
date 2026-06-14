@@ -8,10 +8,7 @@ class PricingService {
 
     calculate(order) {
 
-        let subtotal = 0;
-        for (let i = 0; i < order.items.length; i++) {
-            subtotal += order.items[i].price * order.items[i].quantity;
-        }
+        const subtotal = order.items.reduce( (sum, item) => sum + (item.price * item.quantity), 0 );
 
         const deliveryCharge = Delivery_charges[order.deliveryType] || 0;
 
