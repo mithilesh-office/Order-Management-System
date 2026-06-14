@@ -2,7 +2,8 @@
     "name": "order-management-complete",
     "type": "module",
     "dependencies": {
-        "zod": "^4.4.3"
+        "zod": "^4.4.3",
+        "mongodb": "^6.8.0"
     },
     "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"

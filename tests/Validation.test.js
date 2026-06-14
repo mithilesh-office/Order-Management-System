@@ -29,24 +29,24 @@ describe("OrderService - Validation Tests", () => {
         };
     });
 
-    test("should throw error for invalid email", () => {
+    test("should throw error for invalid email", async () => {
         
         Order.customerEmail = "invalid-email";
-        expect(() => orderService.createOrder(Order)).toThrow();
+        await expect(orderService.createOrder(Order)).rejects.toThrow();
 
     });
 
-    test("should throw error when quantity is 0", () => {
+    test("should throw error when quantity is 0", async () => {
 
         Order.items[0].quantity = 0;
-        expect(() => orderService.createOrder(Order)).toThrow();
+        await expect(orderService.createOrder(Order)).rejects.toThrow();
 
     });
 
-    test("should throw error for invalid SKU", () => {
+    test("should throw error for invalid SKU", async () => {
 
         Order.items[0].sku = "@@@";
-        expect(() => orderService.createOrder(Order)).toThrow();
+        await expect(orderService.createOrder(Order)).rejects.toThrow();
 
     });
 });

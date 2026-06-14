@@ -1,9 +1,9 @@
-import OrderService from "../../src/services/OrderService.js";
+import OrderService from "../services/OrderService.js";
 import {jest} from "@jest/globals";
 
 describe("Generate Summary", () => {
 
-    test("should generate summary",() => {
+    test("should generate summary",async () => {
 
             const repository = {
                 findById: jest.fn()
@@ -23,7 +23,7 @@ describe("Generate Summary", () => {
                     {}
                 );
 
-            const summary = orderService.generateSummary( 1001 );
+            const summary = await orderService.generateSummary( 1001 );
 
             expect(summary).toEqual({
                 orderId: 1001,
@@ -32,6 +32,8 @@ describe("Generate Summary", () => {
                 deliveryCharge: 150,
                 finalAmount: 43500
             });
+            expect(summary.finalAmount).toBe(43500);
+
         }
     );
 });

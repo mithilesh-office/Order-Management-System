@@ -1,4 +1,4 @@
-import PricingService from "../../src/services/PricingService.js";
+import PricingService from "../services/PricingService.js";
 import {jest} from "@jest/globals";
 
 
@@ -13,6 +13,8 @@ describe("PricingService", () => {
             const pricingService = new PricingService( discountService );
 
             const result = pricingService.calculate({
+                id: 1,
+                customerEmail: "john@test.com",
                 deliveryType:"EXPRESS",
                 items: [ {
                     sku: "LAPTOP",

@@ -18,9 +18,9 @@ class MemoryOrderRepository extends OrderRepository {
     }
 }
 update(order){
-    const index = this.orders.findIndex(order => order.id === id)
+    const index = this.orders.findIndex(o => o.id === order.id);
     if(index === -1){
-        throw new error("order not found");
+        throw new Error("order not found");
     }
     this.orders[index] = order;
 }

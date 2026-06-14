@@ -1,10 +1,10 @@
-import OrderService from "../../src/services/OrderService.js";
+import OrderService from "../services/OrderService.js";
 import {jest} from "@jest/globals";
 
 
 describe("Create Order", () => {
 
-    test("should create order successfully",() => {
+    test("should create order successfully",async () => {
 
             const repository = {
                 save: jest.fn()
@@ -39,7 +39,7 @@ describe("Create Order", () => {
                     ]
                 }
 
-            const result = orderService.createOrder(order);
+            const result = await orderService.createOrder(order);
 
             expect(repository.save).toHaveBeenCalled();
             expect(result.finalAmount).toBe(43500);

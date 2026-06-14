@@ -1,4 +1,4 @@
-import DiscountService from "../../src/services/DiscountService.js";
+import DiscountService from "../services/DiscountService.js";
 
 describe("DiscountService", () => {
 

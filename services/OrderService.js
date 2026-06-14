@@ -1,4 +1,4 @@
-import { orderSchema  } from "../validators/orderSchema.js";
+import { orderSchema } from "../validators/orderSchema.js";
 
 class OrderService {
 
@@ -8,7 +8,7 @@ class OrderService {
         this.auditService = auditService;
     }
 
-    createOrder(order) {
+    async createOrder(order) {
 
      const validatedOrder = orderSchema.parse(order);
      const pricing = this.pricingService.calculate(validatedOrder);
@@ -19,20 +19,20 @@ class OrderService {
      
     };
 
-        this.repository.save(savedOrder);
+        await this.repository.save(savedOrder);
         this.auditService.log( "ORDER_CREATED",savedOrder.id );
 
         return savedOrder;
     }
 
 
-    cancelOrder(id) {
+    async cancelOrder(id) {
 
-        this.repository.delete(id);
+        await this.repository.delete(id);
         this.auditService.log("ORDER_CANCELLED", id);
     }
       
-    updateOrder(order){
+    async updateOrder(order){
      const validatedOrder = orderSchema.parse(order);
      const pricing = this.pricingService.calculate(validatedOrder);
      const savedOrder = {
@@ -42,15 +42,15 @@ class OrderService {
      
     };
 
-        this.repository.updateOrder(savedOrder)
+        await this.repository.update(savedOrder);
         this.auditService.log("ORDER_UPDATED" , savedOrder.id);
 
         return savedOrder;
 
     }
-    generateSummary(id) {
+    async generateSummary(id) {
 
-        const order = this.repository.findById(id);
+        const order = await this.repository.findById(id);
 
         if (!order) {
             throw new Error("Order not found");

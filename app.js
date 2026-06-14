@@ -26,15 +26,35 @@ const order = {
     ]
 };
 
-const createdOrder =orderService.createOrder(order);
-
-
-console.log(createdOrder);
+console.log("Creating order...");
+const createdOrder = await orderService.createOrder(order);
+console.log("Created Order:", createdOrder);
 
 console.log("\nSummary of the order\n")
-console.log(orderService.generateSummary(1001));
+console.log(await orderService.generateSummary(1001));
 
-orderService.cancelOrder(1001);
+// Update Order Example
+const updateData = {
+    id: 1001,
+    customerEmail: "john_updated@test.com",
+    deliveryType: "EXPRESS",
+    items: [
+        {
+            sku: "LAPTOP",
+            quantity: 2,
+            price: 51000
+        }
+    ]
+};
+console.log("\nUpdating order...");
+const updatedOrder = await orderService.updateOrder(updateData);
+console.log("Updated Order:", updatedOrder);
+
+console.log("\nSummary of the updated order\n")
+console.log(await orderService.generateSummary(1001));
+
+console.log("\nCancelling order...");
+await orderService.cancelOrder(1001);
 
 console.log("\nEvent logs\n")
 console.log(auditService.getLogs());

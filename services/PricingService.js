@@ -1,6 +1,6 @@
-import { DELIVERY_CHARGES } from "../constants/deliveryCharges.js";
+import Delivery_charges from "../constants/deliveryCharges.js";
 
-export default class PricingService {
+class PricingService {
 
     constructor(discountService) {
         this.discountService = discountService;
@@ -10,10 +10,10 @@ export default class PricingService {
 
         let subtotal = 0;
         for (let i = 0; i < order.items.length; i++) {
-         subtotal += order.items[i].price * order.items[i].quantity;
+            subtotal += order.items[i].price * order.items[i].quantity;
         }
 
-        const deliveryCharge = DELIVERY_CHARGES[ order.deliveryType ] || 0;
+        const deliveryCharge = Delivery_charges[order.deliveryType] || 0;
 
         const discount = this.discountService.calculate(subtotal);
 
@@ -27,3 +27,6 @@ export default class PricingService {
         };
     }
 }
+
+
+export default PricingService;
