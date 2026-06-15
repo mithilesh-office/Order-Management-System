@@ -9,7 +9,7 @@ class OrderRepository {
     }
 
     update(order){
-        throw new error("update() not implemented")
+        throw new Error("update() not implemented");
     }
 
     findById(id) {

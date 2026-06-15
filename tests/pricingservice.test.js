@@ -19,11 +19,13 @@ describe("PricingService", () => {
                 items: [ {
                     sku: "LAPTOP",
                     quantity: 1,
-                    price: 1000
+                    price: 51000
                 }]
                 });
 
             expect( result.deliveryCharge ).toBe(150);
+             expect( result.discount ).toBe(7650);
+
         }
     );
 });
