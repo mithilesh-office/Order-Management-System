@@ -259,14 +259,196 @@ Create an `AuditService` to record events:
 * ORDER_UPDATED
 * ORDER_CANCELLED
 
-Store audit records in memory and expose retrieval methods for reporting and debugging.
+---
 
 
 ## AI Usage Report
 
-### Prompt Used
+Tools Used -  Github copilot , Claude
 
-> Generate a JavaScript function to calculate the subtotal of an order by summing item price × quantity for all items.
+
+### 1. Prompt Used
+
+> Can you suggest a cleaner way to implement `createOrder` so it validates the order, calculates pricing, saves it, and logs the result
+
+**AI Generated Code**
+
+```javascript
+async function createOrder(order) {
+    const validatedOrder = validateOrder(order);
+    const subtotal = calculateSubtotal(validatedOrder.items);
+    const discount = calculateDiscount(subtotal);
+    const deliveryCharge = getDeliveryCharge(validatedOrder.deliveryType);
+    const finalAmount = subtotal - discount + deliveryCharge;
+    const savedOrder = {
+        ...validatedOrder,
+        subtotal,
+        discount,
+        deliveryCharge,
+        finalAmount
+    };
+    await orderRepository.save(savedOrder);
+    auditService.log("ORDER_CREATED", savedOrder.id);
+    return savedOrder;
+}
+```
+
+**Real Code Implemented**
+
+```javascript
+async createOrder(order) {
+    const validatedOrder = this.orderValidator.validate(order);
+    const pricing = this.pricingService.calculate(validatedOrder);
+    const savedOrder = {
+        ...validatedOrder,
+        ...pricing
+    };
+
+    await this.repository.save(savedOrder);
+    this.auditService.log("ORDER_CREATED", savedOrder.id);
+
+    return savedOrder;
+}
+```
+
+**Changes Made**
+
+- Instead of the Standalone function in the `OrderService` , create the services for that . 
+- Kept pricing inside `PricingService` rather than inline.
+- Used injected `repository` and `auditService` objects from the service.
+
+**Why Changes Were Required**
+
+- To adapt the suggestion to the project’s current architecture.
+- To ensure the code matched dependency and service patterns.
+
+---
+
+
+### 2. Prompt Used
+
+> How we can Implement a tiered discount rule for subtotal thresholds
+
+**AI Generated Code**
+
+```javascript
+function calculateDiscount(subtotal) {
+    let rate = 0;
+
+    if (subtotal > 50000) {
+        rate = 0.15;
+    } else if (subtotal > 10000) {
+        rate = 0.10;
+    }
+
+    return subtotal * rate;
+}
+```
+
+**Real Code Implemented**
+
+```javascript
+ calculate(subtotal) {
+
+        if (subtotal > Discount_Rules.High_Discount_Threshold) {
+            return (subtotal * Discount_Rules.High_Discount_Percentage
+            );
+        }
+
+        if ( subtotal >Discount_Rules.Standard_Discount_Threshold) {
+            return (subtotal * Discount_Rules.Standard_Discount_Percentage);
+        }
+
+        return 0;
+    }
+
+```
+
+**Changes Made**
+
+- Create the separte named constant file `DiscountConstant`.
+- Kept the tiered quiz logic but placed it inside `DiscountService`.
+- Preserved the service class style and export format.
+
+**Why Changes Were Required**
+
+- To centralize discount rules in the existing service and avoid changes in the DiscountService . while we need to  update the discount Tiers
+
+---
+
+
+### 3. Prompt Used
+
+> How can a repository method be mocked in Jest so that it returns test data without connecting to a real database
+
+**AI Generated Code**
+
+```javascript
+const mockOrders = [];
+orderRepository.findById = jest.fn().mockReturnValue(
+    { id: '1', total: 100 }
+
+);
+
+await orderService.readorder('1');
+
+expect(orderRepository.findById).toHaveBeenCalledWith('1');
+expect(result).toEqual(mockOrders[0]);
+```
+
+**Real Code Implemented**
+
+```javascript
+const repository = {
+    findById: jest.fn()
+};
+
+repository.findById.mockReturnValue({
+    id: 1001,
+    subtotal: 51000,
+    discount: 7650,
+    deliveryCharge: 150,
+    finalAmount: 43500
+});
+
+const orderService = new OrderService(
+    repository,
+    {},
+    {}
+);
+
+const summary = await orderService.generateSummary(1001);
+
+expect(summary).toEqual({
+    orderId: 1001,
+    subtotal: 51000,
+    discount: 7650,
+    deliveryCharge: 150,
+    finalAmount: 43500
+});
+expect(summary.finalAmount).toBe(43500);
+```
+
+**Changes Made**
+
+- Used the actual test implementation from the project.
+- Showed the repository mock being injected into `OrderService`.
+
+**Why Changes Were Required**
+
+- To match the real unit test style used in the codebase to test it should generate summary
+
+---
+
+### 4. Prompt Used
+
+> Can there is some better approch in javascript to modify the calculation of following total insted of using the for loop and let keyword -
+
+   let total = 0;
+
+   for(let i=0;i<order.items.length;i++){
+ 	total += order.items[i].price * order.items[i].quantity;
+   }
 
 ### AI Generated Code
 
@@ -279,10 +461,44 @@ const subtotal = order.items.reduce(
 
 ### Changes Made
 
-- Integrated the calculation into the `OrderService`.
-- Added validation to ensure item price and quantity are positive values before calculation.
+- Integrated the calculation into the `PricingService`.
 
 ### Why Changes Were Required
 
-- To fit the project's business rules and validation requirements.
-- To improve readability and maintainability compared to a traditional `for` loop.
+ - Reduce method returns the final value directly, so we can use const instead of mutable let variables while eliminating manual loop index bugs
+ - To improve readability and maintainability compared to a traditional `for` loop.
+
+---
+
+
+### 5. Prompt Used 
+
+> How this OrderService violate the design principle? It currently performs validation, pricing calculation, persistence, and logging.
+
+**AI Generated Suggestion**
+
+- Validation, pricing, persistence, and logging are separate responsibilities.
+- Consider extracting pricing and logging into dedicated services.
+- Inject dependencies instead of creating them inside the service.
+
+**Real Changes Implemented**
+
+```
+const orderService = new OrderService(
+    repository,
+    pricingService,
+    auditService
+);
+```
+**Changes Made**
+
+- Introduced `PricingService`.
+- Introduced `AuditService`.
+- Used dependency injection.
+
+**Why Changes Were Required**
+
+- To improve maintainability and unit testability.
+- To reduce coupling between business logic and databse persistence
+
+
