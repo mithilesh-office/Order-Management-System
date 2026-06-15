@@ -1,24 +1,24 @@
 import OrderRepositoryFactory from "./repositories/OrderRepositoryFactory.js";
-
 import AuditService from "./services/AuditService.js";
 import DiscountService from "./services/DiscountService.js";
 import PricingService from "./services/PricingService.js";
 import OrderService from "./services/OrderService.js";
+import OrderValidator from "./validators/OrderValidator.js";
 
 // Repository
 const repository = OrderRepositoryFactory.create("MEMORY");
 
 // Services
 const auditService = new AuditService();
-
 const discountService = new DiscountService();
-
 const pricingService = new PricingService(discountService );
+const orderValidator =  new OrderValidator();
 
 const orderService = new OrderService(
         repository,
         pricingService,
-        auditService
+        auditService,
+        orderValidator
     );
 
 export {
@@ -26,5 +26,6 @@ export {
     auditService,
     discountService,
     pricingService,
-    orderService
+    orderService,
+    orderValidator
 };

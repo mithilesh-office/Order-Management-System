@@ -25,7 +25,11 @@ describe("Create Order", () => {
                 log: jest.fn()
             };
 
-            const orderService = new OrderService(repository,pricingService,auditService);
+            const  orderValidator = {
+                validate : jest.fn()
+            }
+
+            const orderService = new OrderService(repository,pricingService,auditService , orderValidator);
             const order  = {
                     id: 1001,
                     customerEmail:"john@test.com",

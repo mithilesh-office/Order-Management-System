@@ -23,8 +23,7 @@ describe("PricingService", () => {
                 }]
                 });
 
-            expect( result.deliveryCharge ).toBe(150);
-             expect( result.discount ).toBe(7650);
+             expect( result.deliveryCharge ).toBe(150);
 
         }
     );

@@ -12,7 +12,8 @@ describe("Cancel Order", () => {
             const orderService = new OrderService(
                     repository,
                     {},
-                    { log: jest.fn() }
+                    { log: jest.fn() },
+                    {}
                 );
 
             await orderService.cancelOrder(1001);

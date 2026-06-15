@@ -1,16 +1,15 @@
-import { orderSchema } from "../validators/orderSchema.js";
-
 class OrderService {
 
-    constructor( repository,pricingService, auditService) {
+    constructor( repository,pricingService, auditService , OrderValidator) {
         this.repository = repository;
         this.pricingService = pricingService;
         this.auditService = auditService;
+        this.orderValidator = OrderValidator;
     }
 
     async createOrder(order) {
 
-     const validatedOrder = orderSchema.parse(order);
+     const validatedOrder = this.orderValidator.validate(order);
      const pricing = this.pricingService.calculate(validatedOrder);
      const savedOrder = {
 
@@ -33,7 +32,7 @@ class OrderService {
     }
       
     async updateOrder(order){
-     const validatedOrder = orderSchema.parse(order);
+     const validatedOrder = this.orderValidator.validate(order);
      const pricing = this.pricingService.calculate(validatedOrder);
      const savedOrder = {
 
