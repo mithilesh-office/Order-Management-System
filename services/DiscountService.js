@@ -1,16 +1,16 @@
-import { DISCOUNT_RULES } from "../constants/discountConstants.js";
+import Discount_Rules from "../constants/discountConstants.js";
 
 class DiscountService {
 
     calculate(subtotal) {
 
-        if (subtotal > DISCOUNT_RULES.HIGH_DISCOUNT_THRESHOLD) {
-            return (subtotal * DISCOUNT_RULES.HIGH_DISCOUNT_PERCENTAGE
+        if (subtotal > Discount_Rules.High_Discount_Threshold) {
+            return (subtotal * Discount_Rules.High_Discount_Percentage
             );
         }
 
-        if ( subtotal >DISCOUNT_RULES.STANDARD_DISCOUNT_THRESHOLD) {
-            return (subtotal * DISCOUNT_RULES.STANDARD_DISCOUNT_PERCENTAGE);
+        if ( subtotal >Discount_Rules.Standard_Discount_Threshold) {
+            return (subtotal * Discount_Rules.Standard_Discount_Percentage);
         }
 
         return 0;

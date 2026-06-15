@@ -1,7 +1,10 @@
-export const DISCOUNT_RULES = {
-    HIGH_DISCOUNT_THRESHOLD: 50000,
-    HIGH_DISCOUNT_PERCENTAGE: 0.15,
+const Discount_Rules = {
 
-    STANDARD_DISCOUNT_THRESHOLD: 10000,
-    STANDARD_DISCOUNT_PERCENTAGE: 0.10
+    High_Discount_Threshold: 50000,
+    High_Discount_Percentage: 0.15,
+
+    Standard_Discount_Threshold: 10000,
+    Standard_Discount_Percentage: 0.10
+
 };
+export default Discount_Rules;
