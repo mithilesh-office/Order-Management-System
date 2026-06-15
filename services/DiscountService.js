@@ -1,17 +1,20 @@
+import { DISCOUNT_RULES } from "../constants/discountConstants.js";
+
 class DiscountService {
 
     calculate(subtotal) {
 
-        if (subtotal > 50000) {
-            return subtotal * 0.15;
+        if (subtotal > DISCOUNT_RULES.HIGH_DISCOUNT_THRESHOLD) {
+            return (subtotal * DISCOUNT_RULES.HIGH_DISCOUNT_PERCENTAGE
+            );
         }
 
-        if (subtotal > 10000) {
-            return subtotal * 0.10;
+        if ( subtotal >DISCOUNT_RULES.STANDARD_DISCOUNT_THRESHOLD) {
+            return (subtotal * DISCOUNT_RULES.STANDARD_DISCOUNT_PERCENTAGE);
         }
 
         return 0;
     }
 }
 
-export default  DiscountService;
+export default DiscountService;
